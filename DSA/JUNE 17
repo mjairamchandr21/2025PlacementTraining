@@ -1,1 +1,90 @@
+####Reverse_Digits
 
+class Solution {
+  public:
+    int reverseDigits(int n) {
+        int reversed_digit=0;
+        while(n>0){
+            int digit=n%10;
+            reversed_digit=reversed_digit*10+digit;
+            n=n/10;
+        }
+        return reversed_digit;
+    }
+};
+
+
+####Search_Insert_Position
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int l = 0;
+        int n = nums.size();
+        int k = n-1;
+        int ans = n;
+
+        while(l <= k){
+            int mid = l+(k-l)/2;
+            if(target <= nums[mid]){
+                ans = mid;
+                k=mid-1;
+            }
+            else{
+                l=mid+1;
+            }
+        }
+        return ans;
+    }
+};
+
+
+####Single_Number
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+    // we can perform using XOR opertion: all the duplicates cancel each other and single one remains.
+    int index = 0;
+    for(int i=0; i<nums.size();i++){
+        index=index^nums[i];
+    } 
+    return index;
+    }
+};
+
+
+####Missing_Number
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        // create another array of size n+1 and insert elements into it in an order, so that we can get missing number
+        int n = nums.size();
+        vector<int>miss(n+1,-1);      // creating array and inserting into it
+        for(int i=0;i<nums.size();i++){    
+            miss[nums[i]]=nums[i];
+        }
+        for(int i=0;i<miss.size();i++){        // finding missing number
+            if(miss[i]==-1)return i;
+        }
+        return 0;
+    }
+};
+
+##To reduce space complexity
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+       // to reduce space complexity we can use XOR operation here
+        int n = nums.size();
+        int ans =0;
+        for(int i =1;i<=n;i++){
+            ans = ans ^ i;
+        }              // perform Xor operation with every number
+        for(int i =0;i<nums.size();i++){     
+            ans= ans^nums[i];
+        }
+        return ans;
+    }
+};
