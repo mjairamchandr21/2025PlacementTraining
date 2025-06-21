@@ -1,1 +1,92 @@
+####Find_the_Town_Judge
 
+class Solution {
+public:
+    int findJudge(int n, vector<vector<int>>& trust) {
+        // we can do using hash table
+        // if a trusts b, then mark a as -1 or decrease their count
+        // and increase count for other members. Judge will have n-1 count
+         vector<int> arr(n + 1, 0);
+        for(auto person : trust){
+            arr[person[0]]--;
+            arr[person[1]]++;
+        }
+        for(int i = 1;i <= n;i++){
+            if(arr[i] == n - 1)
+                return i;
+        }
+        return -1;
+    }
+};
+
+####Plus_One
+
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+         int n = digits.size();
+        for(int i = n-1; i >= 0; i--){
+            if(i == n-1)
+                digits[i]++;
+            if(digits[i] == 10){
+                digits[i] = 0;
+                if(i != 0){
+                    digits[i-1]++;
+                }
+                else{
+                    digits.push_back(0);
+                    digits[i] = 1;
+                }
+            }
+        }
+        return digits;
+    }
+};
+
+####Maximum_Subarray
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int res = INT_MIN;
+        int Sum = 0;
+        
+        for (int n : nums) {
+            Sum += n;
+            
+            if (Sum > res) {
+                res = Sum;
+            }
+            
+            if (Sum < 0) {
+                Sum = 0;
+            }
+        }
+        
+        return res;
+    }
+};
+
+####Assign_Cookies
+
+class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
+
+        int childIndex = g.size() - 1;
+        int cookieIndex = s.size() - 1;
+        int contentChildren = 0;
+
+        while (childIndex >= 0 && cookieIndex >= 0) {
+            if (s[cookieIndex] >= g[childIndex]) {
+                contentChildren++;
+                cookieIndex--;
+            }
+            childIndex--;
+        }
+
+        return contentChildren;
+    }
+};
