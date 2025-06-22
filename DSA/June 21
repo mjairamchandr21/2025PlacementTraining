@@ -1,1 +1,122 @@
+####Minimum_Size_Subarray_Sum
 
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int a=0;
+        int b=0;
+        int sum=0;
+        int mini=INT_MAX;
+        while(b<nums.size()){
+            sum+=nums[b];
+            while(sum>=target){
+                sum-=nums[a];
+                mini=min(b-a+1,mini);
+                a++;
+            }
+            b++;
+        }
+        if(mini==INT_MAX){
+            return 0;
+        }
+        return mini;
+    }
+};
+
+####Majority_Element_II
+
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        // Create a frequency map to store the count of each element
+        unordered_map<int, int> elementCountMap;
+        
+        // Iterate through the input array to count element occurrences
+        for(int i = 0; i < nums.size(); i++) {
+            elementCountMap[nums[i]]++;
+        }
+        
+        vector<int> majorityElements;
+        int threshold = nums.size() / 3;
+        
+        // Iterate through the frequency map to identify majority elements
+        for(auto elementCountPair : elementCountMap) {
+            int element = elementCountPair.first;
+            int count = elementCountPair.second;
+            
+            // Check if the element count is greater than the threshold
+            if(count > threshold) {
+                majorityElements.push_back(element);
+            }
+        }
+        
+        return majorityElements; 
+    }
+};
+
+####Next_Permutation
+
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+    	int n = nums.size(), k, l;
+    	for (k = n - 2; k >= 0; k--) {
+            if (nums[k] < nums[k + 1]) {
+                break;
+            }
+        }
+    	if (k < 0) {
+    	    reverse(nums.begin(), nums.end());
+    	} else {
+    	    for (l = n - 1; l > k; l--) {
+                if (nums[l] > nums[k]) {
+                    break;
+                }
+            } 
+    	    swap(nums[k], nums[l]);
+    	    reverse(nums.begin() + k + 1, nums.end());
+        } 
+    }
+};
+
+####Grumpy_Bookstore_Owner
+
+class Solution {
+public:
+   
+    int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int minutes) {
+
+        int n = customers.size();
+
+        int custSatisfied = 0;
+        int maxOfCustSatisfied = 0;
+
+        for (int i = 0; i < minutes; i++) {
+            custSatisfied += customers[i] * grumpy[i];
+        }
+
+        maxOfCustSatisfied = custSatisfied;
+        int i = 0;
+        int j = minutes;
+
+        while (j < n) {
+            custSatisfied +=
+                customers[j] * grumpy[j]; 
+            custSatisfied -=
+                customers[i] * grumpy[i]; 
+            maxOfCustSatisfied = max(maxOfCustSatisfied, custSatisfied); 
+
+            i++;
+            j++;
+        }
+        // calculating total satisfied customers.
+        int totalSatisfied = maxOfCustSatisfied;
+        for (int i = 0; i < n; i++) {
+            if (grumpy[i] == 0) {
+                totalSatisfied += customers[i];
+            }
+        }
+
+        return totalSatisfied;
+    }
+};
