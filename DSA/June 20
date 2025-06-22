@@ -1,1 +1,124 @@
+####Rotate_Image
+
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        int edgeLength = matrix.size();
+
+        int top = 0;
+        int bottom = edgeLength - 1;
+
+        while (top < bottom) {
+            for (int col = 0; col < edgeLength; col++) {
+                int temp = matrix[top][col];
+                matrix[top][col] = matrix[bottom][col];
+                matrix[bottom][col] = temp;
+            }
+            top++;
+            bottom--;
+        }
+
+        for (int row = 0; row < edgeLength; row++) {
+            for (int col = row + 1; col < edgeLength; col++) {
+                int temp = matrix[row][col];
+                matrix[row][col] = matrix[col][row];
+                matrix[col][row] = temp;
+            }
+        }        
+    }
+};
+
+####3Sum
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+       int target = 0;
+        sort(nums.begin(), nums.end());
+        set<vector<int>> triplet;
+        vector<vector<int>> output;
+        for (int i = 0; i < nums.size(); i++){
+            int j = i + 1;
+            int k = nums.size() - 1;
+            while (j < k) {
+                int sum = nums[i] + nums[j] + nums[k];
+                if (sum == target) {
+                    triplet.insert({nums[i], nums[j], nums[k]});
+                    j++;
+                    k--;
+                } else if (sum < target) {
+                    j++;
+                } else {
+                    k--;
+                }
+            }
+        }
+        for(auto triplets : triplet)
+            output.push_back(triplets);
+        return output;
+    }
+};
+
+####Max_Consecutive_Ones
+
+class Solution {
+public:
+    int findMaxConsecutiveOnes(vector<int>& nums) {
+        int count=0;
+        int cons_ones=0;
+        for(int n:nums){
+            if(n==0){
+                count=0;
+            }
+            else{
+                count++;
+            }
+            if(cons_ones<count){
+                cons_ones=count;
+            }
+        }
+        return cons_ones;
+    }
+};
+
+####Design_Twitter
+
+class Twitter {
+public:
+    Twitter() {}
+    int count = 0;
+    unordered_map<int,vector<pair<int,int>>>m;
+    map<pair<int,int>,int>m1;
+    void postTweet(int userId, int tweetId) {
+        m[userId].push_back({count,tweetId});
+        count++;
+    }
+    
+    vector<int> getNewsFeed(int userId) {
+        unordered_set<int> v;
+        vector<pair<int,int>>v1;
+        vector<int>ans;
+        v.insert(userId);
+        for(auto i:m1){
+            if(i.first.first == userId && i.second>0) v.insert(i.first.second);
+        }
+        for(auto i:v){
+            v1.insert(v1.end(),m[i].begin(),m[i].end());
+        }
+        sort(v1.rbegin(),v1.rend());
+        for(auto i:v1){
+            if (ans.size() == 10) break;
+            ans.push_back(i.second);
+        }
+        return ans;
+    }
+    
+    void follow(int followerId, int followeeId) {
+        m1[{followerId,followeeId}]++;
+    }
+
+    void unfollow(int followerId, int followeeId) {
+        if(m1[{followerId,followeeId}]) m1[{followerId,followeeId}]--;
+    }
+};
 
