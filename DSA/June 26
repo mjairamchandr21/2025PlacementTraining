@@ -1,1 +1,108 @@
+####Palindrome Linked List
 
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        ListNode* slow = head;
+        ListNode* fast = head;
+        
+        while(fast && fast->next){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        
+        ListNode* prev = NULL;
+        ListNode* temp = NULL;
+        ListNode* curr = slow;
+        
+        while(curr){
+            temp = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        
+        // check first half and last half is equal
+        while(prev && head){
+            if(prev->val !=head->val) return false;
+            prev=prev->next;
+            head=head->next;
+        }
+        return true;
+    }
+};
+
+####Rotate List
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(!head) return head;
+        
+        int n=1; 
+        ListNode *node, *tail;
+        node=tail=head;
+        
+        while(tail->next)  
+        {
+            tail = tail->next;
+            n++;
+        }
+        tail->next = head; 
+
+        if(k %= n) 
+        {
+            for(auto i=0; i<n-k; i++) tail = tail->next; 
+        }
+        node = tail->next; 
+        tail->next = NULL;
+        return node;
+    }
+};
+
+####Magical String
+
+class Solution {
+public:
+    int magicalString(int n) {
+        string str = "122";
+        char next = '1';
+        int index = 2;
+        int res = 1;
+        while(str.size() < n) {
+            int t = str[index] - '0';
+            while(t--) {
+                str.push_back(next);
+                res += ((str.size() <= n && next == '1') ? 1 : 0);
+            }
+            index++;
+            next = invert(next);
+        }
+        return res;
+    }
+    char invert(char c) {
+        if(c == '1')
+            return '2';
+        else return '1';
+    }
+};
