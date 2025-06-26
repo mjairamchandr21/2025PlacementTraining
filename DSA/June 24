@@ -1,1 +1,196 @@
+####Design a Singly Linked List and write functions to
+○ Insert at beginning
+○ Insert at end
+○ Insert at any index
+○ Delete at beginning
+○ Delete at end
+○ Delete at index
+○ Delete first occurrence of node with given value
+
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int x) {
+        data = x;
+        next = nullptr;
+    }
+};
+
+class SinglyLinkedList {
+private:
+    Node* head;
+
+public:
+    SinglyLinkedList() {
+        head = nullptr;
+    }
+
+    // Insert at beginning
+    void insert_Beginning(int x) {
+        Node* new_node = new Node(x);
+        new_node->next = head;
+        head = new_node;
+    }
+
+    // Insert at end
+    void insert_End(int x) {
+        Node* new_node = new Node(x);
+        if (!head) {
+            head = new_node;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next)
+            temp = temp->next;
+        temp->next = new_node;
+    }
+
+    // Insert at index (0-based)
+    void insert_Index(int i, int x) {
+        if (i == 0) {
+            insert_Beginning(x);
+            return;
+        }
+        Node* newNode = new Node(x);
+        Node* temp = head;
+        for (int a = 0; a < i - 1 && temp; a++)
+            temp = temp->next;
+        if (!temp) {
+            cout << "Error, Check Inputs.\n";
+            return;
+        }
+        newNode->next = temp->next;
+        temp->next = newNode;
+    }
+
+    // Delete at beginning
+    void delete_Beginning() {
+        if (!head) return;
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+
+    // Delete at end
+    void delete_End() {
+        if (!head) return;
+        if (!head->next) {
+            delete head;
+            head = nullptr;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next && temp->next->next)
+            temp = temp->next;
+        delete temp->next;
+        temp->next = nullptr;
+    }
+
+    // Delete at index
+    void delete_Index(int i) {
+        if (!head) return;
+        if (i == 0) {
+            delete_Beginning();
+            return;
+        }
+        Node* temp = head;
+        for (int a = 0; a < i - 1 && temp; a++)
+            temp = temp->next;
+        if (!temp || !temp->next) {
+            cout << "Error, Check Inputs.\n";
+            return;
+        }
+        Node* del = temp->next;
+        temp->next = del->next;
+        delete del;
+    }
+
+    // Delete first occurrence of value
+    void delete_Value(int x) {
+        if (!head) return;
+        if (head->data == x) {
+            delete_Beginning();
+            return;
+        }
+        Node* temp = head;
+        while (temp->next && temp->next->data != x)
+            temp = temp->next;
+        if (temp->next) {
+            Node* del = temp->next;
+            temp->next = del->next;
+            delete del;
+        }
+    }
+
+    // Display linked list
+    void display_List() {
+        Node* temp = head;
+        while (temp) {
+            cout << temp->data << " -> ";
+            temp = temp->next;
+        }
+        cout << "NULL\n";
+    }
+};
+
+####Delete a Node in Singly Linked List
+
+/*Link list Node
+struct Node
+{
+    int data;
+    struct Node* next;
+
+    Node(int x){
+        data = x;
+        next = NULL;
+    }
+};
+*/
+class Solution {
+  public:
+    /* Function to delete a node from a linked list */
+    Node* deleteNode(Node* head, int x) {
+         if (x==1){
+            Node* temp=head->next;
+            delete head;
+            return temp;
+        }
+        head->next=deleteNode(head->next,x-1);
+        return head;
+        
+    }
+};
+
+####Find Middle
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+         ListNode *one_step = head, *two_step = head;
+         
+        while (two_step && two_step->next)
+        {
+            one_step = one_step->next;
+            two_step = two_step->next->next;
+        }
+        return one_step;
+    }
+};
+
 
