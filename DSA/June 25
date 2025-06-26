@@ -1,1 +1,56 @@
+####Reverse_linked_list
 
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* node = nullptr;
+        ListNode* rev = head;
+        while (rev != nullptr) {
+            ListNode* temp = rev->next;
+            rev->next = node;
+            node = rev;
+            rev = temp;
+        }
+
+        return node;        
+    }
+};
+
+####Linked List Cycle
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        if (head == NULL || head->next == NULL) {
+            return false;
+        }
+        ListNode* one_step = head;
+        ListNode* two_step = head->next;
+        while (two_step != one_step) {
+            if (two_step->next == NULL || two_step->next->next == NULL) {
+                return false;
+            }
+            one_step = one_step->next;
+            two_step = two_step->next->next;
+        }
+        return true;
+    }
+};
