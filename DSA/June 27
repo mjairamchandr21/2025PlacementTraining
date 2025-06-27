@@ -1,1 +1,96 @@
+####Add Two Numbers
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* temp1 = new ListNode();
+        ListNode* temp2 = temp1;
+        int sum = 0, carry = 0;
+
+        while (l1 || l2 || carry) {
+            sum = carry;
+
+            if (l1) {
+                sum += l1->val;
+                l1 = l1->next;
+            }
+            if (l2) {
+                sum += l2->val;
+                l2 = l2->next;
+            }
+
+            int num = sum % 10;
+            carry = sum / 10;
+            temp1->next = new ListNode(num);
+            temp1 = temp1->next;
+        }
+
+        ListNode* result = temp2->next;
+        delete temp2;
+        return result;         
+    }
+};
+
+####Maximum Twin Sum
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    int pairSum(ListNode* head) {
+        
+        ListNode* fastptr = head;
+        ListNode* slowptr = head;
+
+        fastptr = fastptr->next->next;
+        while(fastptr != nullptr && fastptr->next != nullptr) {
+            slowptr = slowptr->next;
+            fastptr = fastptr->next->next;
+        }
+
+        ListNode* initial = nullptr;
+        ListNode* current = slowptr->next;
+
+        while(current != nullptr) {
+            ListNode* nxt = current->next;
+            current->next = initial;
+            initial = current;
+            current = nxt;
+        }
+
+        slowptr->next = initial;
+
+        slowptr = slowptr->next;
+        fastptr = head;
+
+        int maxtwinSum = INT_MIN;
+        while(slowptr != nullptr) {
+            int sum = slowptr->val + fastptr->val;
+            slowptr = slowptr->next;
+            fastptr = fastptr->next;
+            maxtwinSum = max(maxtwinSum, sum);
+        }
+
+        return maxtwinSum;
+    
+    }
+};
 
