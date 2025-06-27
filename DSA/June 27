@@ -94,3 +94,53 @@ public:
     }
 };
 
+####Design Browser History
+
+class node {
+public:
+    string str;
+    node* nxt;
+    node* prv;
+
+    node(string s) {
+        this->str = s;
+        this->nxt = nullptr;
+        this->prv = nullptr;
+    }
+};
+
+class BrowserHistory {
+    node* current;
+public:
+    BrowserHistory(string homepage) {
+        current = new node(homepage);
+    }
+    
+    void visit(string url) {
+        node* newnode = new node(url);
+        current->nxt = newnode;
+        newnode->prv = current;
+        current = newnode;
+    }
+    
+    string back(int steps) {
+        while (steps-- && current->prv) {
+            current = current->prv;
+        }
+        return current->str;
+    }
+    
+    string forward(int steps) {
+        while (steps-- && current->nxt) {
+            current = current->nxt;
+        }
+        return current->str;
+    }
+};
+/**
+ * Your BrowserHistory object will be instantiated and called as such:
+ * BrowserHistory* obj = new BrowserHistory(homepage);
+ * obj->visit(url);
+ * string param_2 = obj->back(steps);
+ * string param_3 = obj->forward(steps);
+ */
