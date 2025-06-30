@@ -1,1 +1,119 @@
+####Design Stack using Arrays
+○ The data structure should contain functions like top, push, pop and peep.
+○ peep() function allows the user inspect values at any position in a stack
 
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Stack {
+private:
+    vector<int> arr;
+
+public:
+    void push(int val) {
+        arr.push_back(val);
+    }
+
+    int pop() {
+        if (arr.empty()) {
+            cout << "Stack Underflow\n";
+            return -1;
+        }
+        int val = arr.back();
+        arr.pop_back();
+        return val;
+    }
+
+    int top() {
+        if (arr.empty()) {
+            cout << "Stack is empty\n";
+            return -1;
+        }
+        return arr.back();
+    }
+
+    int peep(int position) {
+        if (position <= 0 || position > arr.size()) {
+            cout << "Invalid position\n";
+            return -1;
+        }
+        int index = arr.size() - position;
+        return arr[index];
+    }
+
+    void display() {
+        if (arr.empty()) {
+            cout << "Stack is empty\n";
+            return;
+        }
+        cout << "Stack: ";
+        for (int i = arr.size() - 1; i >= 0; i--)
+            cout << arr[i] << " ";
+        cout << "\n";
+    }
+};
+
+
+####Valid Parentheses
+
+class Solution {
+public:
+    bool isValid(string s) {
+        // Initialize a stack 
+        stack<char> stack;
+        int index = 0;
+        if(s.size() == 0){
+            return true;
+        }
+        while(index < s.size()){
+            if( s[index] == '(' || s[index] == '[' || s[index] == '{' ){
+                stack.push(s[index]);
+            }
+            else if ( (s[index] == ')' && !stack.empty() && stack.top() == '(') ||
+                        (s[index] == '}' && !stack.empty() && stack.top() == '{') ||
+                        (s[index] == ']' && !stack.empty() && stack.top() == '[')
+                      ){
+                stack.pop();
+            }
+            else {
+                return false;       
+            }
+            index++;      
+        }
+        if(stack.empty()) {
+            return true;
+        }
+        return false;
+    }
+};
+
+####Swapping Nodes
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapNodes(ListNode* head, int k) {
+        ListNode *left = head, *right = head;
+        for(int i = 1; i < k; i++)
+            left = left->next;
+        ListNode *curr = left;
+        while(curr->next != nullptr){
+            curr = curr->next;
+            right = right->next;
+        }
+        int t = left->val;
+        left->val = right->val;
+        right->val = t;
+        return head;
+    }
+};
