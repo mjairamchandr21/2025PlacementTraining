@@ -1,1 +1,146 @@
+####Design Queue using Arrays
+○ The data structure should contain functions like front, enqueue, dequeue,
+isEmpty and size.
 
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Queue {
+private:
+    vector<int> data;
+    int frontIndex = 0; 
+public:
+    void enqueue(int val) {
+        data.push_back(val);
+        cout << val << " joined the queue.\n";
+    }
+
+    int dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is already empty. No one to dequeue.\n";
+            return -1;
+        }
+        int removed = data[frontIndex++];
+        cout << removed << " left the queue.\n";
+        return removed;
+    }
+
+    int front() {
+        if (isEmpty()) {
+            cout << "Nobody’s in the queue.\n";
+            return -1;
+        }
+        return data[frontIndex];
+    }
+
+    bool isEmpty() {
+        return frontIndex >= data.size();
+    }
+
+    int size() {
+        return data.size() - frontIndex;
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty.\n";
+            return;
+        }
+        cout << "Queue right now: ";
+        for (int i = frontIndex; i < data.size(); i++)
+            cout << data[i] << " ";
+        cout << "\n";
+    }
+};
+
+
+####Next Greater Element I
+
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+      unordered_map<int,int> map;
+      stack<int> stack;
+
+      for(int i = nums2.size()-1 ; i>=0; i--){
+        while(!stack.empty() && stack.top() <= nums2[i]){
+        stack.pop();
+        }
+        if(!stack.empty()) map[nums2[i]] = stack.top();
+        else map[nums2[i]] = -1;
+        stack.push(nums2[i]);
+      }
+      vector<int> res;
+
+      for(int num:nums1){
+        res.push_back(map[num]);
+      }
+      return res;
+    }
+    
+};
+
+####Next Greater Element II
+
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        int n = nums.size();
+        stack<int> stack;
+        vector<int> res(n);
+        for(int i=n*2-1;i>=0;i--){
+            while(!stack.empty() && stack.top()<=nums[i%n]){
+                stack.pop();
+            }
+            if(i<n){
+                if(!stack.empty()){
+                    res[i]=stack.top();
+                }
+                else{
+                    res[i]=-1;
+                }
+            }
+            stack.push(nums[i%n]);
+        }
+        return res;
+    }
+};
+
+####Odd Even Linked List/**
+
+
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if(head == NULL || head->next == NULL)return head;
+        ListNode* odd = new ListNode(0);
+        ListNode* odd_ptr = odd;
+        ListNode* even = new ListNode(0);
+        ListNode* even_ptr = even;
+        int index = 1;
+        while(head != NULL){
+            if(index % 2 == 0){
+                even_ptr->next = head;
+                even_ptr = even_ptr->next;
+            }else{
+                odd_ptr->next = head;
+                odd_ptr = odd_ptr->next;
+            }
+            head = head->next;
+            index++;
+        }
+        even_ptr->next = NULL;
+        odd_ptr->next = even->next; 
+        return odd->next;
+    }
+};
