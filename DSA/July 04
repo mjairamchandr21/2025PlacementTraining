@@ -1,1 +1,165 @@
+####Find The Celebrity
+
+class Solution {
+  public:
+    int celebrity(vector<vector<int> >& mat) {
+        int n = mat.size(), top = 0, down = n - 1;
+        while(top < down)
+        {
+            if(mat[top][down] == 1)
+            {
+                //if top knows down, then top can't be a celebrity. SImple(:
+                top++;
+            }
+            else if(mat[down][top] == 1)
+            {
+                //if down knows top, then down can't be a celebrity. SImple(:
+                down--;
+            }
+            else
+            {
+                //If the above 2 cases are false, then top should be known by all, to be a celebrity, but down don't know top. Simlary for down as well.
+                top++;
+                down--;
+            }
+        }
+        if(top > down)
+            return -1;
+        // Once check the celebrity row or column, in worst case that person whom we assumed as celebrity might know someone. then no one will be a celebrity.
+        for(int i = 0; i < n; i++)
+        {
+            if(i == top)
+                continue;
+                
+            if(mat[top][i] == 1 || mat[i][top] == 0)
+            {
+                return -1;
+            }
+        }
+        return top;
+    }
+};
+
+####Trapping Rain Water
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int n=height.size();
+        int left=0;
+        int right=n-1;
+        int leftmax=0;
+        int rightmax=0;
+        int total=0;
+        while(left<right)
+        {
+            if(height[left]<=height[right])
+            {
+                if(height[left]<leftmax)
+                {
+                    total+=leftmax-height[left];
+                    
+                }
+                else
+                {
+                    leftmax=height[left];
+                }
+                left++;
+            }
+            else
+            {
+                if(height[right]<rightmax)
+                {
+                    total+=rightmax-height[right];
+                }
+                else
+                {
+                    rightmax=height[right];
+                }
+                right--;
+            }
+        }
+        return total;
+
+    }
+};
+
+####LRU Cache
+
+class LRUCache {
+public:
+    class Node{
+    public:
+        int key, val;
+        Node *next;
+        Node *prev;
+
+        Node(int k,int v){
+            key = k;
+            val= v;
+            prev = next = NULL;
+        }
+    };
+
+    Node *head = new Node(-1,-1);
+    Node *tail = new Node(-1,-1);
+    unordered_map<int, Node*> m;
+    int limit;
+    void addNode(Node *newNode){ //O(1)
+        Node *oldNext = head->next;
+        head->next = newNode;
+        oldNext->prev = newNode;
+        newNode->next = oldNext;
+        newNode->prev = head;
+    }
+    void deleteNode(Node *oldNode){ //O(1)
+        Node *oldPrev= oldNode->prev;
+        Node *oldNext = oldNode->next;
+        oldPrev->next = oldNext;
+        oldNext->prev = oldPrev;
+    }
+    LRUCache(int capacity) {
+        limit = capacity;
+        head->next = tail;
+        tail->prev=  head;
+    }
+    
+    int get(int key) {
+        if(m.find(key)!=m.end()){
+            Node* ansNode = m[key];
+            int ans = ansNode->val;
+            m.erase(key);
+            deleteNode(ansNode);
+
+            addNode(ansNode);
+            m[key] = ansNode;
+            return ans;
+        }
+        else return -1;
+    }
+    
+    void put(int key, int value) {
+        if(m.find(key)!=m.end()){
+            Node *oldNode = m[key];
+            deleteNode(oldNode);
+            m.erase(key);
+        }
+
+        if(m.size()==limit){
+            //delete LRU data
+            m.erase(tail->prev->key);
+            deleteNode(tail->prev);
+        }
+        Node *newNode = new Node(key,value);
+        addNode(newNode);
+        m[key] = newNode;
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
 
