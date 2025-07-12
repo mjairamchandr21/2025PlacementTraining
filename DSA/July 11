@@ -1,1 +1,111 @@
+####Palindrome Partitioning
 
+class Solution {
+public:
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> result;
+        vector<string> path;
+        solve(0, s, path, result);
+        return result;
+    }
+private:
+    void solve(int idx, const string &s, vector<string> &path, vector<vector<string>> &result) {
+        if (idx >= s.length()) {
+            result.push_back(path);
+            return;
+        }
+        for (int i = idx; i < s.length(); ++i) {
+            string subStr = s.substr(idx, i - idx + 1);
+            if (isPalindrome(subStr)) {
+                path.push_back(subStr);
+                solve(i + 1, s, path, result);
+                path.pop_back();
+            }
+        }
+    }
+    bool isPalindrome(const string &str) {
+        int left = 0, right = str.length() - 1;
+        while (left < right) {
+            if (str[left] != str[right]) return false;
+            ++left;
+            --right;
+        }
+        return true;
+    }
+};
+
+####Fair Distribution of Cookies
+
+class Solution {
+public:
+    int ans;
+    vector<int> count;
+    
+    int distributeCookies(vector<int>& cookies, int k) {
+        ans = INT_MAX;
+        count.resize(k);
+
+        backtrack(0, cookies, k);
+        return ans;
+    }
+    
+    void backtrack(int cookieNumber, vector<int>& cookies, int k) {
+        if (cookieNumber == cookies.size()) {
+            int max = 0;
+            for (int i = 0; i < k; i++) {
+                max = std::max(max, count[i]);
+            }
+            ans = min(ans, max);
+            return;
+        }
+        
+        for (int i = 0; i < k; i++) {
+            count[i] += cookies[cookieNumber];
+            backtrack(cookieNumber + 1, cookies, k);
+            count[i] -= cookies[cookieNumber];
+            if (count[i] == 0) {
+                break;
+            }
+        }
+    }
+};
+
+####N-Queens
+
+class Solution {
+private:
+    void solve(int col, int n, vector<string>& board, vector<int>& leftRow,
+               vector<int>& upperDiagonal, vector<int>& lowerDiagonal,
+               vector<vector<string>>& result) {
+        if (col == n) {
+            result.push_back(board);
+            return;
+        }
+        for (int row = 0; row < n; row++) {
+            if (leftRow[row] == 0 && upperDiagonal[row + col] == 0 &&
+                lowerDiagonal[n - 1 + col - row] == 0) {
+                
+                board[row][col] = 'Q';
+                leftRow[row] = 1;
+                upperDiagonal[row + col] = 1;
+                lowerDiagonal[n - 1 + col - row] = 1;
+
+                solve(col + 1, n, board, leftRow, upperDiagonal, lowerDiagonal, result);
+
+                board[row][col] = '.';
+                leftRow[row] = 0;
+                upperDiagonal[row + col] = 0;
+                lowerDiagonal[n - 1 + col - row] = 0;
+            }
+        }
+    }
+
+public:
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> result;
+        vector<string> board(n, string(n, '.'));
+        vector<int> leftRow(n, 0), upperDiagonal(2 * n - 1, 0), lowerDiagonal(2 * n - 1, 0);
+        solve(0, n, board, leftRow, upperDiagonal, lowerDiagonal, result);
+        return result;
+    }
+};
