@@ -1,1 +1,123 @@
+####Combination Sum II
 
+class Solution {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& cand, int target) {
+        sort(cand.begin(), cand.end());
+        vector<vector<int>> res;
+        vector<int> path;
+        dfs(cand, 0, target, path, res);
+        return res;
+    }
+    
+    void dfs(vector<int>& cand, int cur, int target, vector<int>& path, vector<vector<int>>& res) {
+        if (target == 0) {
+            res.push_back(path);
+            return;
+        }
+        if (target < 0) return;
+        
+        for (int i = cur; i < cand.size(); i++) {
+            if (i > cur && cand[i] == cand[i - 1]) continue;
+            path.push_back(cand[i]);
+            dfs(cand, i + 1, target - cand[i], path, res);
+            path.pop_back(); 
+        }
+    }
+};
+
+####Find All Groups of Farmland
+
+class Solution {
+public:
+    
+    void dfs(int i, int j, vector<vector<int>>& a, vector<vector<int>>& v, int &ri, int &rj) {
+        v[i][j] = 1;
+        if (i + 1 < a.size() && a[i + 1][j] == 1 && v[i + 1][j] == 0) {
+            ri = max(ri, i + 1);
+            dfs(i + 1, j, a, v, ri, rj);
+        }
+        
+        if (j + 1 < a[0].size() && a[i][j + 1] == 1 && v[i][j + 1] == 0) {
+            rj = max(rj, j + 1);
+            dfs(i, j + 1, a, v, ri, rj);
+        }
+    }
+
+  
+    vector<vector<int>> findFarmland(vector<vector<int>>& a) {
+        vector<vector<int>> ans;
+
+        int i, j;
+        vector<vector<int>> v(a.size(), vector<int>(a[0].size(), 0));
+
+        for (i = 0; i < a.size(); i++) {
+            for (j = 0; j < a[0].size(); j++) {
+                
+                if (!v[i][j] && a[i][j] == 1) {
+                    int li = i, lj = j, ri = i, rj = j;
+                    dfs(i, j, a, v, ri, rj);
+                    ans.push_back({li, lj, ri, rj});
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+
+####Rat in A Maze - I
+
+class Solution {
+  public:
+    void func(int i, int j, vector<vector<int>>& mpp, vector<string>& ans, string str, vector<vector<int>>& maze,int n)
+    {
+        if(i==n-1 && j==n-1)
+        {
+            ans.push_back(str);
+            return;
+        }
+        
+        if(i+1<n && mpp[i+1][j]==0 && maze[i+1][j]==1)
+        {
+            str.push_back('D');
+            mpp[i+1][j]=1;
+            func(i+1,j,mpp,ans,str,maze,n);
+            str.pop_back();
+            mpp[i+1][j]=0;
+        }
+        if(j-1>=0 && mpp[i][j-1]==0 && maze[i][j-1]==1)
+        {
+            str.push_back('L');
+            mpp[i][j-1]=1;
+            func(i,j-1,mpp,ans,str,maze,n);
+            str.pop_back();
+            mpp[i][j-1]=0;
+        }
+        if(j+1<n && mpp[i][j+1]==0 && maze[i][j+1]==1)
+        {
+            str.push_back('R');
+            mpp[i][j+1]=1;
+            func(i,j+1,mpp,ans,str,maze,n);
+            str.pop_back();
+            mpp[i][j+1]=0;
+        }
+        if(i-1>=0 && mpp[i-1][j]==0 && maze[i-1][j]==1)
+        {
+            str.push_back('U');
+            mpp[i-1][j]=1;
+            func(i-1,j,mpp,ans,str,maze,n);
+            str.pop_back();
+            mpp[i-1][j]=0;
+        }
+    }
+    vector<string> ratInMaze(vector<vector<int>>& maze) {
+        int n = maze.size();
+        vector<vector<int>> mpp(n, vector<int>(n,0));
+        mpp[0][0] = 1;
+        string str = "";
+        vector<string> ans;
+        func(0,0,mpp,ans,str,maze,n);
+        return ans;
+    }
+};
