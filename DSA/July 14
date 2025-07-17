@@ -1,1 +1,190 @@
+####Inorder Traversal
 
+# recursion
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+// InOrder Traversal -> L N R 
+// Traverse the left subtree till NULL (Base Case), print/store the node, traverse the right subtree(till NULL - Base Case)
+    void inOrder (TreeNode *node, vector<int> &result)
+    {
+        if (node == NULL)
+        {
+            return ;
+        }
+
+        inOrder (node -> left, result) ; 
+        result.push_back(node -> val) ; 
+        inOrder (node -> right, result) ;
+
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> result ; 
+
+        inOrder (root, result) ; 
+        return result ; 
+    }
+};
+
+#interactive approach
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+
+        stack<TreeNode *> s;
+
+        TreeNode *curr = root;
+
+        while(curr != NULL || s.empty() == false){
+            while(curr){
+                s.push(curr);
+                curr = curr->left;
+            }
+            curr = s.top();
+            s.pop();
+
+            res.push_back(curr->val);
+            curr = curr->right;
+        }
+
+        return res;
+    }
+};
+
+
+####Level Order Traversal
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>>ans;
+        if(root==NULL) return ans;
+       queue<TreeNode*>q;
+       q.push(root);
+       while(!q.empty())
+       {
+        int n=q.size();
+        vector<int>res;
+        while(n--)
+        {
+           TreeNode* cur=q.front();
+           q.pop();
+           res.push_back(cur->val);
+           if(cur->left) q.push(cur->left);
+           if(cur->right) q.push(cur->right);
+        }
+        ans.push_back(res);
+       } 
+       return ans;
+    }
+};
+
+####Maximum of Binary Tree
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+
+        queue<TreeNode*> q;
+        q.push(root);
+        int depth = 0;
+
+        while (!q.empty()) {
+            int size = q.size();
+            depth++;
+
+            for (int i = 0; i < size; ++i) {
+                TreeNode* node = q.front();
+                q.pop();
+
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+        }
+
+        return depth;
+    }
+};
+
+####Diameter of Binary Tree
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int diameter = 0;  
+
+    int calculateHeight(TreeNode* node) {
+        if (node == nullptr) {
+            return 0;
+        }
+        int leftHeight = calculateHeight(node->left);
+        int rightHeight = calculateHeight(node->right);
+
+        diameter = max(diameter, leftHeight + rightHeight);
+
+        return 1 + max(leftHeight, rightHeight);
+    }
+
+    int diameterOfBinaryTree(TreeNode* root) {
+        calculateHeight(root);
+        return diameter;
+    }
+};
