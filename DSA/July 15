@@ -1,1 +1,157 @@
+####Same Tree
 
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if(p==NULL|q==NULL)
+        {
+            return p==q;
+        }
+        if(p->val!=q->val)
+        {
+            return false;
+        }
+        bool l=isSameTree(p->left,q->left);
+        bool r=isSameTree(p->right,q->right);
+        return l&&r;
+    }
+};
+
+####Zigzag Level Order Traversal
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int>> result;
+
+        if (root == NULL) {
+            return result;
+        }
+
+        queue<TreeNode*> nodesQueue;
+        nodesQueue.push(root);
+
+        bool leftToRight = true;
+
+        while (!nodesQueue.empty()) {
+            int size = nodesQueue.size();
+            vector<int> row(size);
+
+            for (int i = 0; i < size; i++) {
+                TreeNode* node = nodesQueue.front();
+                nodesQueue.pop();
+
+                int index = leftToRight ? i : (size - 1 - i);
+                row[index] = node->val;
+
+                if (node->left) {
+                    nodesQueue.push(node->left);
+                }
+                if (node->right) {
+                    nodesQueue.push(node->right);
+                }
+            }
+
+            leftToRight = !leftToRight;
+            result.push_back(row);
+        }
+
+        return result;
+    }
+};
+
+####Path Sum
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (root == nullptr) {
+            return false;
+        }
+
+        queue<pair<TreeNode*, int>> q;
+        q.push({root, root->val});
+
+        while (!q.empty()) {
+            TreeNode* node = q.front().first;
+            int sum = q.front().second;
+            q.pop();
+
+            // Check if it's a leaf node with required sum
+            if (!node->left && !node->right && sum == targetSum) {
+                return true;
+            }
+
+            // Enqueue left and right children with updated sums
+            if (node->left) {
+                q.push({node->left, sum + node->left->val});
+            }
+            if (node->right) {
+                q.push({node->right, sum + node->right->val});
+            }
+        }
+
+        return false;
+    }
+};
+
+####Invert Binary Tree
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(!root) return nullptr;
+        
+        TreeNode* left = invertTree(root->left);
+        TreeNode* right = invertTree(root->right);
+
+        root->left = right;
+        root->right = left;
+
+        return root;
+    }
+};
