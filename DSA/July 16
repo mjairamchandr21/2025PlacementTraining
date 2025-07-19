@@ -1,1 +1,141 @@
+####Binary Tree Right Side View
 
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> result;
+        if (!root) return result;
+
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while (!q.empty()) {
+            int levelSize = q.size();
+            for (int i = 0; i < levelSize; ++i) {
+                TreeNode* node = q.front();
+                q.pop();
+
+                if (i == levelSize - 1) result.push_back(node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+        }
+
+        return result;
+    }
+};
+
+
+####Path Sum II
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void findPathSums(TreeNode* root,int& target, int& curSum, vector<int>& current,vector<vector<int>>& res){
+        if(!root)return;
+
+        curSum += root->val;
+        current.push_back(root->val);
+
+        if(!root->left && !root->right && target == curSum){
+            res.push_back(current);
+        }
+
+        findPathSums(root->left,target, curSum, current, res);
+        findPathSums(root->right,target, curSum, current, res);
+        curSum -= root->val;
+        current.pop_back();
+    }
+
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        vector<vector<int>> res;
+        vector<int> temp; 
+        int currentSum = 0;
+        findPathSums(root,targetSum,currentSum,temp,res);
+        return res;
+    }
+};
+
+
+####Lowest Common Ancestor
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // bc
+        if(root==p || root==q || root==NULL)
+            return root;
+        TreeNode* lca_from_left= lowestCommonAncestor(root->left, p,q);
+        TreeNode* lca_from_right= lowestCommonAncestor(root->right, p,q);
+        if(lca_from_left&& lca_from_right){
+            return root;
+        }
+        else{
+            return lca_from_left ? lca_from_left : lca_from_right;
+        }
+
+    }
+};
+
+
+####Kth Smallest Element in BST
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int c=0,res=-1;
+    void inorder(TreeNode* root,int k){
+        if(root==nullptr || c>=k) return;
+        inorder(root->left,k);
+        c++;
+        if(c==k){
+            res=root->val;
+            return;
+        }
+        inorder(root->right,k);
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        inorder(root,k);
+        return res;
+    }
+};
