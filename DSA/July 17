@@ -1,1 +1,184 @@
+####LCA in Binary Tree
 
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        // bc
+        if(root==p || root==q || root==NULL)
+            return root;
+        TreeNode* lca_from_left= lowestCommonAncestor(root->left, p,q);
+        TreeNode* lca_from_right= lowestCommonAncestor(root->right, p,q);
+        if(lca_from_left&& lca_from_right){
+            return root;
+        }
+        else{
+            return lca_from_left ? lca_from_left : lca_from_right;
+        }
+
+    }
+};
+
+####Time to be Infected in Binary Tree
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void parentN(TreeNode* root,unordered_map<TreeNode*,TreeNode*>& parent_node,int start,TreeNode* &target){
+        queue<TreeNode*>q;
+        q.push(root);
+        while(!q.empty()){
+            TreeNode* parent = q.front();
+            q.pop();
+
+            if(parent->left){
+                parent_node[parent->left]=parent;
+                q.push(parent->left);
+                if(parent->left->val == start){
+                    target=parent->left;
+                }
+            }
+            if(parent->right){
+                parent_node[parent->right]=parent;
+                q.push(parent->right);
+                if(parent->right->val == start){
+                    target=parent->right;
+                }
+            }
+        }
+    }
+    int amountOfTime(TreeNode* root, int start) {
+        if(root==NULL) return 0;
+        
+        unordered_map<TreeNode*,TreeNode*>parent_node;
+        TreeNode* target=nullptr;
+        if(root->val == start){
+            target=root;
+        }
+        parentN(root,parent_node,start,target);
+        if(!target){
+            return 0;
+        }
+        unordered_map<TreeNode*,bool>visited;
+        visited[target]=true;
+        queue<TreeNode*>q;
+        q.push(target);
+        int ans=-1;
+        while(!q.empty()){
+            int size=q.size();
+            ans++;
+            for(int i=0;i<size;i++){
+                TreeNode* node=q.front();
+                q.pop();
+
+                if(node->left && !visited[node->left]){
+                    visited[node->left]=true;
+                    q.push(node->left);
+                }
+                if(node->right && !visited[node->right]){
+                    visited[node->right]=true;
+                    q.push(node->right);
+                }
+                if(parent_node[node] && !visited[parent_node[node]]){
+                    visited[parent_node[node]]=true;
+                    q.push(parent_node[node]);
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+####Count Nodes in Complete Tree
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int findDepthLeft(TreeNode* root){
+        if (root == NULL) return 0;
+        return 1 + findDepthLeft(root->left);
+    }
+
+
+    int countNodes(TreeNode* root) {
+        if (root == NULL) return 0;
+        int depth_L = findDepthLeft(root->left);
+        int depth_R = findDepthLeft(root->right);
+
+        // Either left tree is full (largest in row continues to left)
+        // Or right tree is full (full row, largest ended in next row on left)
+        // Counting each level gives us: 1 + 2 + 4 ... + 2^(depth_R - 1)
+        // = 2^depth_R - 1. Since we also need to include this node, it is 2^depth_R
+        int counted = pow(2, depth_R);
+
+        if (depth_L == depth_R){
+            // 1 + count(depth_L == depth_R) + rest
+            return counted + countNodes(root->right);
+    
+        } else{
+            // 1 + count(depth_R) + rest
+            return counted + countNodes(root->left);
+        }
+        
+    }
+};
+
+####Validate BST
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        return bst(root, LLONG_MIN, LLONG_MAX);
+    }
+
+    bool bst(TreeNode* root, long long min_val, long long max_val) {
+        if (root == NULL) {
+            return true;
+        }
+
+        if (!(min_val < root->val && root->val < max_val)) {
+            return false;
+        }
+
+        return bst(root->left, min_val, root->val) && bst(root->right, root->val, max_val);
+    }
+};
